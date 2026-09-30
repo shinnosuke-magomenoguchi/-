@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja"><!-- 日本語の文章だとしてい-->
+<head><!--裏側の情報を描くこの順番-->
+    <meta charset="UTF-8">
+    <title>己の野望</title><!--ブラウザのタブってこと-->
+    <style>
+        body {
+            margin:0;
+            min-height: 100vh;
+            font-family: "hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+            color: #f3efe4;
+            padding:28px 16px 60px;
+            position: relative;
+        }
+        .bg-photo {
+            position:fixed;
+            inset: 0;
+            z-index: -2;
+            background-image: url("bg.jpg");
+            background-size: cover;
+            background-position: center 35%;
+        }
+        .bg-dim {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(180deg, rgba(10,14,18,0.35) 0%, rgba(10,14,18,0.55) 40%, rgba(8,10,12,0.78) 100%);
+
+        }
+        #bg-video {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .panel {
+            background:rgba(20,22,26,0.72);
+            backdrop-filter:blur(6px);
+            border: 1px solid rgba(212,175,106,0.35);
+            border-radius:10px;
+            padding: 18px;
+            margin-bottom: 18px;
+            
+        }
+        .grid{display:grid;grid-template-columns:1fr;gap:18px;}
+        @media(min-width:760px){.grid{grid-template-columns:320px 1fr;}}
+
+        #onboard-screen {
+            max-width:  500px;
+            margin: 60px auto;
+            }
+        #main-screen {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        #task-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 58px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        #task-list::-webkit-scrollbar{width:6px;}
+        #task-list::-webkit-scrollbar-thumb{background:#f0cf8a;border-radius:3px;}
+        #task-list::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);} 
+        .task-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 4px 4px;
+            border-bottom: 1px solid rgba(212,175,106,0.15);
+        }
+        .task-row:last-child {
+            border-bottom: none;
+        }
+        .task-row button {
+            padding:3px 9px;
+            font-size: 10px
+        }
+        .task-title {
+            flex: 1;
+            min-width: 120px;
+            font-size: 14px;
+        }
+        .task-tag {
+            font-size: 10px;
+            color: #6fae8a;
+            border: 1px solid #6fae8a;
+            border-radius: 20px;
+            padding: 1px 7px;
+            white-space: nowrap;
+        }
+        .task-meta {
+            font-size: 11px;
+            color: #c9c3b4;
+            white-space: nowrap;
+        }
+        button.danger {
+            background: transparent;
+            color: #c9c3b4;
+            border: 1px solid rgba(212,175,106,0.3);
+            font-weight: 400;
+            font-size: 11px;
+            padding: 5px 10px;
+            margin-left: auto;
+        }
+        .stat-row{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid rgba(212,175,106,0.15);}
+        .stat-row:last-child{border-bottom:none;}
+        .stat-name{width:80px;font-size:13px;flex:none;}
+        .stat-slider{flex:1;accent-color:#f0cf8a;}
+        .stat-num{width:36px;text-align:right;font-size:13px;color:#f0cf8a;font-weight:700;}
+
+        #stat-sliders{
+            max-height: 114px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+        #stat-sliders::-webkit-scrollbar{width:6px;}
+        #stat-sliders::-webkit-scrollbar-thumb{background:#f0cf8a;border-radius:3px;}
+        #stat-sliders::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);}
+        
+        .add-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
+        .stat-check-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+        .stat-check-row label{
+            display:flex;align-items:center;gap:4px;font-size:11px;color:#c9c3b4;
+            background:rgba(0,0,0,0.3);border:1px solid rgba(212,175,106,0.3);border-radius:20px;padding:3px 8px;
+            white-space:nowrap;
+}
+
+        .focus-stage {
+            text-align: center;
+            padding: 10px 0;
+
+        }
+        .focus-timer {
+            font-size: 32px;
+            font-weight: 700;
+            margin:10px 0;
+        }
+        .focus-controls {
+            display: flex;
+            justify-content:center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .footer-note {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        h1, h2, h3 {
+            color: #f0cf8a;
+            font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+        }
+        .panel h2 {
+            font-family: inherit;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            font-weight: 400;
+            color: #d4af6a;
+            margin: 0 0 12px;
+        }
+        button {
+            background: linear-gradient(180deg, #f8cf8a, #d4af6a);
+            color: #141414;
+            border: none;
+            border-radius: 5px;
+            padding: 9px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+
+        }
+        input[type=text], input[type=number], select {
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(212,175,106,0.35);
+            color:#f3efe4;
+            border-radius: 5px;
+            padding: 8px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-photo"></div>
+    <video id="bg-video" loop ></video>
+    <div class="bg-dim"></div>
+
+    <div id="onboard-screen" class="panel">
+        <h2>出陣準備</h2>
+        <p>六つの能力の初期値を決めてください</p>
+        <div id="onboard-sliders"></div>
+        <button onclick="startFromOnboarding()">この能力で出陣する</button>
+    </div>
+
+    <div id="main-screen">
+    <h1>己の野望</h1>
+    <p>称号: <span id="rank-display">-</span>(総合値: <span id="score-display">0</span>) </p>
+    
+    <div class="grid">
+     <div class="panel">
+      <h2>能力値</h2>
+      <svg id="radar-svg" viewBox="0 0 320 340" width="100%">
+         <g id="radar-grid"></g>
+         <polygon id="radar-polygon" points="" fill="gold" stroke="black" />
+         <g id="radar-labels"></g>
+     </svg>     
+
+    </div>
+      
+
+<div class="panel">
+  <h2>能力値一覧</h2>
+
+    
+  <div id="stat-sliders"></div>
+    <h2 style="margin-top:6px;">タスク</h2>
+    <ul id="task-list"></ul>
+
+    <div class="add-form-row" style="margin-top:10px;">
+      <input type="text" id="new-task-title" placeholder="タスク名">
+      <button onclick="addTask()">追加</button>
+    </div>
+    <div class="stat-check-row" id="new-task-stat-checks"></div>
+  </div>
+</div>
+
+
+ 
+<div class="panel">
+    <h2>集中モード</h2>
+    <div class="focus-stage">
+         <p>タスク: <span id="focus-task-name">未選択</span></p>
+         <div class="focus-timer" id="timer-display">0秒</div>
+         <div class="focus-controls">
+           <button onclick="startFocus()">集中スタート</button>
+           <button onclick="stopFocus()">集中ストップ</button>
+         </div>
+         
+         <p>背景動画: <input type="file" id="video-file" accept="video/*"></p>
+         
+    </div>
+  
+
+
+
+</div> 
+<div class="footer-note">
+    <button class="danger" onclick="resetAll()">最初からやり直す</button>
+</div>
+
+</div>
+
+
+
+
+<script src="Script.js"></script>
+</body>
+</html>
