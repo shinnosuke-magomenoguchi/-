@@ -92,10 +92,10 @@ function addTask() {
   }
 
 const newTask = {
-  title: titleInput.value,
-  statKeys:selectedKeys
-  
-};
+    title: titleInput.value,
+    statKeys: selectedKeys,
+    totalSeconds: 0
+  };
 
 tasks.push(newTask);
 
@@ -184,7 +184,7 @@ function polarPoint(cx, cy, r, angleDeg) {
 
 function drawRadar() {
   const cx = 160, cy = 165;
-  const maxR = 95;
+  const maxR = 105;
 
   const keys = Object.keys(stats);
 
@@ -224,7 +224,7 @@ function drawGridAndLabels(cx, cy, maxR, keys) {
     let anchor = "middle";
     if (lx > cx + 5) anchor = "start";
     if (lx < cx - 5) anchor = "end";
-    labelGroup.innerHTML += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="12" fill="#f3efe4" text-anchor="${anchor}">${statLabels[key]} ${Math.round(stats[key])}</text>`;
+    labelGroup.innerHTML += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" font-size="12" fill="#f3efe4" text-anchor="${anchor}">${statLabels[key]} ${stats[key].toFixed(1)}</text>`;
   });
 }
 function updateRankDisplay() {
