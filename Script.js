@@ -1,3 +1,10 @@
+function playSeClick() {
+  const se = document.getElementById("se-click");
+  if(!se) return;
+  se.currentTime = 0;
+  se.play().catch(() => {});
+
+}
 let currentFocusTaskIndex = null;
 
 
@@ -10,6 +17,7 @@ function startTaskFocus(taskIndex) {
 let sessionStartTime = null;
 let totalFocusedSeconds = 0;
 let timerInterval = null;
+let isEditingNames = false;
 
 const stats = {
   continuity: 30,
@@ -50,8 +58,8 @@ function renderTasks() {
         <span class="task-meta">累計 ${hours}時間 /  経過 <span id="task-elapsed-${i}">０秒</span></span>
         
        
-        <button onclick="startTaskFocus(${i})">開始</button>
-        <button class="danger" onclick="deleteTask(${i})">削除</button>
+        <button onclick="playSeClick(); startTaskFocus(${i})">開始</button>
+        <button class="danger" onclick="playSeClick(); deleteTask(${i})">削除</button>
       </li>
     `;
   }
@@ -106,6 +114,38 @@ for (let i = 0; i< checkedBoxes.length; i++) {
 
 renderTasks();
 saveData();
+
+const ul = document.getElementById("task-list");
+ul.scrollTop = ul.scrollHeight;
+}
+
+
+function toggleEditNames() {
+  if (isEditingNames) {
+    for (const key in statLabels) {
+      const input = document.getElementById("name-input-" + key);
+      const newName = input.value.trim();
+      if (newName !== "") {
+        statLabels[key] = newName;
+      }
+    }
+    isEditingNames = false;
+    document.getElementById("edit-names-btn").textContent = "名前を編集";
+    saveData();
+    renderAll();
+  } else {
+    isEditingNames = true;
+    document.getElementById("edit-names-btn").textContent = "保存";
+    renderStatSliders();
+  }
+}
+
+function renderAll() {
+  renderStatSliders();
+  renderTasks();
+  renderTaskStatOptions();
+  drawRadar();
+  updateRankDisplay();
 }
 
 function renderStatSliders() {
@@ -113,9 +153,12 @@ function renderStatSliders() {
   container.innerHTML = "";
 
   for (const key in stats) {
+    const nameHtml = isEditingNames
+      ? `<input type="text" class="stat-name-input" id="name-input-${key}" value="${statLabels[key]}" maxlength="8">`
+      : `<div class="stat-name">${statLabels[key]}</div>`;
     container.innerHTML += `
       <div class="stat-row">
-        <div class="stat-name">${statLabels[key]}</div>
+        ${nameHtml}
         <input type="range" class="stat-slider" min="1" max="100"
           value="${stats[key]}" tabindex="-1" style="pointer-events:none;">
         <div class="stat-num" id="value-${key}">${stats[key].toFixed(1)}</div>
@@ -131,7 +174,7 @@ function renderOnboardSliders() {
   for (const key in stats) {
     container.innerHTML += `
     <p>
-    ${statLabels[key]}: <span id="onboard-value-${key}">30</span>
+    <input type="text" class="onboard-name" id="onboard-name-${key}" value="${statLabels[key]}" maxlength="8">: <span id="onboard-value-${key}">30</span>
     <br>
     <input
       type="range"
@@ -153,6 +196,10 @@ function startFromOnboarding() {
   for (const key in stats) {
     const el = document.getElementById("onboard-value-" + key);
     stats[key] = Number(el.textContent);
+    const newName =document.getElementById("onboard-name-" + key).value.trim();
+    if (newName !== "") {
+      statLabels[key] = newName;
+    }
     
   }
   localStorage.setItem("onboardDone" ,"true");
@@ -322,12 +369,20 @@ function updateStatFromTime() {
 function saveData() {
   localStorage.setItem("myStats", JSON.stringify(stats));
   localStorage.setItem("myTasks", JSON.stringify(tasks));
-
+  localStorage.setItem("myStatLabels", JSON.stringify(statLabels));
 }
 
 function loadData() {
   const savedStats = localStorage.getItem("myStats");
   const savedTasks = localStorage.getItem("myTasks");
+    const savedLabels = localStorage.getItem("myStatLabels");
+
+  if (savedLabels) {
+    const parsedLabels = JSON.parse(savedLabels);
+    for (const key in parsedLabels) {
+      statLabels[key] = parsedLabels[key];
+    }
+  }
 
   if(savedStats) {
     const parsed = JSON.parse(savedStats);
@@ -357,6 +412,7 @@ function resetAll() {
 
   localStorage.removeItem("myStats");
   localStorage.removeItem("myTasks");
+  localStorage.removeItem("myStatLabels");
   localStorage.removeItem("onboardDone");
 
   location.reload();

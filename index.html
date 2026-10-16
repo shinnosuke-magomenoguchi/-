@@ -152,6 +152,60 @@
             text-align: center;
             margin-top: 10px;
         }
+        .panel-head{
+            display:flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .panel-head h2 {
+            margin:0;
+        }
+        button.small {
+            padding: 3px 10px;
+            font-size: 11px;
+        }
+        input[type=text].stat-name-input {
+            width: 96px;
+            flex: none;
+            padding: 4px 6px;
+            font-size: 12px;
+            
+        }
+        input[type=text].stat-name-input:focus {
+            outline: none;
+            border-color: #1a1919;
+        }
+
+        input[type=text].onboard-name {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed rgba(212,175,106,0.5);
+            border-radius: 0;
+            padding: 0;
+            width: 6em;
+            font-size: inherit;
+            color: inherit;
+        }
+                input[type=text].onboard-name:focus {
+            outline: none;
+            border-bottom: 1px solid #1a1a19;
+        }
+        .onboard-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .onboard-row input[type=range] {
+            flex: 1;
+            accent-color: #f0cf8a;
+        }
+        .onboard-row span {
+            width: 28px;
+            text-align: right;
+            color: #f0cf8a;
+            font-weight: 700;
+        }
 
         h1, h2, h3 {
             color: #f0cf8a;
@@ -190,12 +244,13 @@
     <div class="bg-photo"></div>
     <video id="bg-video" loop ></video>
     <div class="bg-dim"></div>
+    <audio id="se-click" src="button.mp3" preload="auto"></audio> 
 
     <div id="onboard-screen" class="panel">
         <h2>出陣準備</h2>
-        <p>六つの能力の初期値を決めてください</p>
+        <p>六つの能力の初期値を決めてください。能力名は後からでも変更できます。</p>
         <div id="onboard-sliders"></div>
-        <button onclick="startFromOnboarding()">この能力で出陣する</button>
+        <button onclick="playSeClick(); startFromOnboarding()">この能力で出陣する</button>
     </div>
 
     <div id="main-screen">
@@ -215,7 +270,10 @@
       
 
 <div class="panel">
-  <h2>能力値一覧</h2>
+   <div class="panel-head">
+    <h2>能力値一覧</h2>
+    <button class="small" id="edit-names-btn" onclick="playSeClick(); toggleEditNames()">名前を編集</button>
+  </div>
 
     
   <div id="stat-sliders"></div>
@@ -224,7 +282,7 @@
 
     <div class="add-form-row" style="margin-top:10px;">
       <input type="text" id="new-task-title" placeholder="タスク名">
-      <button onclick="addTask()">追加</button>
+      <button onclick="playSeClick(); addTask()">追加</button>
     </div>
     <div class="stat-check-row" id="new-task-stat-checks"></div>
   </div>
@@ -238,8 +296,8 @@
          <p>タスク: <span id="focus-task-name">未選択</span></p>
          <div class="focus-timer" id="timer-display">0秒</div>
          <div class="focus-controls">
-           <button onclick="startFocus()">集中スタート</button>
-           <button onclick="stopFocus()">集中ストップ</button>
+           <button onclick="playSeClick(); startFocus()">集中スタート</button>
+           <button onclick="playSeClick(); stopFocus()">集中ストップ</button>
          </div>
          
          <p>背景動画: <input type="file" id="video-file" accept="video/*"></p>
