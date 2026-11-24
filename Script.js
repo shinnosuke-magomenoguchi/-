@@ -9,9 +9,17 @@ let currentFocusTaskIndex = null;
 
 
 function startTaskFocus(taskIndex) {
+  // すでに計測中なら
+  if (sessionStartTime !== null) {
+    // 同じタスクならそのまま続ける
+    if (currentFocusTaskIndex === taskIndex) return;
+    // 別のタスクなら前のタスクの時間を記録してから切り替える
+    stopFocus();
+  }
   currentFocusTaskIndex = taskIndex;
   const task = tasks[taskIndex];
   document.getElementById("focus-task-name").textContent = task.title;
+  startFocus(); // 開始ボタンを押したらすぐに計測スタート
 }
 
 let sessionStartTime = null;
@@ -301,6 +309,7 @@ function updateRankDisplay() {
 }
 
 function startFocus() {
+  if (sessionStartTime !== null) return; // 計測中に押しても時間がリセットされないように
   sessionStartTime = Date.now();
   timerInterval = setInterval(updateTimerDisplay, 1000);
   const videoEl = document.getElementById("bg-video");

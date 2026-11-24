@@ -65,7 +65,7 @@
             padding-right: 6px;
         }
         #task-list::-webkit-scrollbar{width:6px;}
-        #task-list::-webkit-scrollbar-thumb{background:#f0cf8a;border-radius:3px;}
+        #task-list::-webkit-scrollbar-thumb{background:#e7d8b0;border-radius:3px;}
         #task-list::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);} 
         .task-row {
             display: flex;
@@ -77,10 +77,6 @@
         }
         .task-row:last-child {
             border-bottom: none;
-        }
-        .task-row button {
-            padding:3px 9px;
-            font-size: 10px
         }
         .task-title {
             flex: 1;
@@ -100,20 +96,11 @@
             color: #c9c3b4;
             white-space: nowrap;
         }
-        button.danger {
-            background: transparent;
-            color: #c9c3b4;
-            border: 1px solid rgba(212,175,106,0.3);
-            font-weight: 400;
-            font-size: 11px;
-            padding: 5px 10px;
-            margin-left: auto;
-        }
         .stat-row{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid rgba(212,175,106,0.15);}
         .stat-row:last-child{border-bottom:none;}
         .stat-name{width:80px;font-size:13px;flex:none;}
-        .stat-slider{flex:1;accent-color:#f0cf8a;}
-        .stat-num{width:48px;text-align:right;font-size:13px;color:#f0cf8a;font-weight:700;}
+        .stat-slider{flex:1;accent-color:#e7d8b0;}
+        .stat-num{width:48px;text-align:right;font-size:13px;color:#f6edd5;font-weight:700;}
 
         #stat-sliders{
             max-height: 114px;
@@ -121,7 +108,7 @@
             padding-right: 6px;
         }
         #stat-sliders::-webkit-scrollbar{width:6px;}
-        #stat-sliders::-webkit-scrollbar-thumb{background:#f0cf8a;border-radius:3px;}
+        #stat-sliders::-webkit-scrollbar-thumb{background:#e7d8b0;border-radius:3px;}
         #stat-sliders::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);}
         
         .add-form-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;}
@@ -160,10 +147,6 @@
         .panel-head h2 {
             margin:0;
         }
-        button.small {
-            padding: 3px 10px;
-            font-size: 11px;
-        }
         input[type=text].stat-name-input {
             width: 96px;
             flex: none;
@@ -198,17 +181,17 @@
         }
         .onboard-row input[type=range] {
             flex: 1;
-            accent-color: #f0cf8a;
+            accent-color: #e7d8b0;
         }
         .onboard-row span {
             width: 28px;
             text-align: right;
-            color: #f0cf8a;
+            color: #f6edd5;
             font-weight: 700;
         }
 
         h1, h2, h3 {
-            color: #f0cf8a;
+            color: #f6edd5;
             font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
         }
         .panel h2 {
@@ -216,19 +199,98 @@
             font-size: 12px;
             letter-spacing: 0.2em;
             font-weight: 400;
-            color: #d4af6a;
+            color: #e7d8b0;
             margin: 0 0 12px;
         }
+        /* ===== 和風ボタン ===== */
         button {
-            background: linear-gradient(180deg, #f8cf8a, #d4af6a);
-            color: #141414;
-            border: none;
-            border-radius: 5px;
-            padding: 9px 16px;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            padding: 6px 28px;
             font-size: 13px;
             font-weight: 700;
+            color: #2b2214;
+            /* 上の縁に黄色い帯を入れる(明るい線→黄土色→本体の色へ) */
+            background: linear-gradient(180deg,
+                #f4f3cf 0px, #f4f3cf 1px,
+                #c4bd8c 1px, #c4bd8c 2px,
+                #d6cda2 2px, #fffbf2 7px,
+                #f6edd5 45%, #e7d8b0 100%);
+            border: 1px solid #a08850;
+            border-radius: 6px;
+            /* 左上を明るく右下を暗くして少し斜めから見たような立体感を出す */
+            box-shadow:
+                inset 2px 0 0 #fff3c8,
+                inset -2px -2px 0 rgba(110,90,55,0.45),
+                3px 3px 0 rgba(0,0,0,0.45),
+                3px 4px 6px rgba(0,0,0,0.35);
             cursor: pointer;
+        }
 
+        /* 小さいボタン(タスク行・名前編集など) */
+        button.small,
+        .task-row button {
+            min-height: 0;
+            padding: 3px 10px;
+            font-size: 11px;
+            box-shadow:
+                inset 1px 0 0 #fff3c8,
+                inset -1px -1px 0 rgba(110,90,55,0.45),
+                2px 2px 0 rgba(0,0,0,0.45),
+                2px 3px 4px rgba(0,0,0,0.3);
+        }
+
+        .task-row button {
+            padding: 3px 9px;
+            font-size: 10px;
+        }
+        /* カーソルを乗せたら青くなる */
+        button:hover,
+        button.small:hover,
+        .task-row button:hover {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,30,70,0.85);
+            background: linear-gradient(180deg, #6fcbff 0%, #2a98e6 45%, #0d5fb3 100%);
+            border-color: #c8eeff;
+            box-shadow:
+                inset 2px 2px 0 rgba(255,255,255,0.5),
+                inset -2px -2px 0 rgba(0,40,90,0.45),
+                3px 3px 0 rgba(0,0,0,0.45),
+                3px 4px 6px rgba(0,0,0,0.35);
+        }
+        button.small:hover,
+        .task-row button:hover {
+            box-shadow:
+                inset 1px 1px 0 rgba(255,255,255,0.5),
+                inset -1px -1px 0 rgba(0,40,90,0.45),
+                2px 2px 0 rgba(0,0,0,0.45),
+                2px 3px 4px rgba(0,0,0,0.3);
+        }
+        /* 削除・やり直すボタンは元の見た目のまま */
+        button.danger,
+        button.danger:hover,
+        button.danger:active {
+            display: revert;
+            position: revert;
+            min-height: 0;
+            background: transparent;
+            color: #c9c3b4;
+            border: 1px solid rgba(212,175,106,0.3);
+            border-radius: 5px;
+            box-shadow: none;
+            font-family: revert;
+            font-weight: 400;
+            font-size: 11px;
+            letter-spacing: normal;
+            padding: 5px 10px;
+            margin-left: auto;
+            filter: none;
+            transform: none;
+            transition: none;
+            text-shadow: none;
         }
         input[type=text], input[type=number], select {
             background: rgba(0,0,0,0.35);
@@ -262,7 +324,14 @@
       <h2>能力値</h2>
       <svg id="radar-svg" viewBox="-20 0 360 340" width="100%">
          <g id="radar-grid"></g>
-         <polygon id="radar-polygon" points="" fill="gold" stroke="black" />
+         <defs>
+           <linearGradient id="radar-fill" x1="0" y1="0" x2="0" y2="1">
+             <stop offset="0%" stop-color="#fffbf2"/>
+             <stop offset="45%" stop-color="#f6edd5"/>
+             <stop offset="100%" stop-color="#e7d8b0"/>
+           </linearGradient>
+         </defs>
+         <polygon id="radar-polygon" points="" fill="url(#radar-fill)" fill-opacity="0.92" stroke="#9c7b3e" stroke-width="2" stroke-linejoin="round" />
          <g id="radar-labels"></g>
      </svg>     
 
